@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 
-def path_to_project_root(root_folder_name: str = 'benefit-viz-next'):
+def path_to_project_root(root_folder_name: str = 'benefit_viz_next'):
     path = os.getcwd()
     while not str(path).endswith(root_folder_name):
         path = Path(path).parent
