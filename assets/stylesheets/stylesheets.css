@@ -92,8 +92,17 @@
     margin-top: 19px;
   }
 
+  main {
+    display: grid;
+    justify-content: center;
+  }
+
+  article {
+    position: relative;
+  }
+
   .summary-box {
-    display: flex;
+    display: inline-block;
     /* justify-content: center; */
     align-items: center;
     padding-left: 16px;
@@ -116,7 +125,8 @@
   .info-more {
     display: inline-block;
     position: absolute;
-    right: 23px;
+    right: 24px;
+    top: 0.9px;
     color: #027B1A;
     font-family: NanumSquare;
     font-size: 14px;
@@ -127,6 +137,7 @@
   }
 
   .plot-area {
+    display: block;
     width: 358px;
     border-radius: 20px;
     border: 1px solid rgba(0, 0, 0, 0.05);
@@ -135,4 +146,10 @@
     margin-left: 16px;
     margin-right: 16px;
     
+  }
+
+  .table-area-1 {
+    margin-left: 15px;
+    margin-right: 15px;
+    border-radius: 10px 10px 10px 10px;
   }

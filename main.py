@@ -1,4 +1,5 @@
 from dash import Dash, Input, Output, State, html, dcc
+import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -20,7 +21,7 @@ dash_app.title = '장학금 및 연구비 데이터 시각화 서비스'
 server = dash_app.server
 dash_app.config.suppress_callback_exceptions = True
 
-
+'''
 # Plot 1 to test the Dash
 # bring parameters
 param1 = 'AAEXNEA8lKEv5dYsaLBzlX3'
@@ -65,6 +66,19 @@ df_chart.rename(columns={'semester': '학기', 'KEDI_sch_div': '유형',
 # '국가장학' '저소득' '기타' '성적우수' '근로' '재난' '사설및기타' '교직원' '통계조사 미반영'
 # 연구비 항목까지 하면 총 11개이므로, '사설및기타' 항목을 '기타' 항목으로 같이 묶어서 총 10개로 만듦
 df_chart['유형'].replace('사설및기타', '기타', inplace=True)
+'''
+
+df_chart = pd.read_csv('./etc/df_test.csv', usecols=[1,2,3,4])
+
+# 차트 유형 정렬을 위한 순서 지정
+dict_category_order = {
+    '유형': ['(연구) 월인건비', '(연구) 연구수당',
+            '(장학) 근로', '(장학) 국가장학', '(장학) 기타', '(장학) 성적우수', '(장학) 교직원',
+            '(장학) 재난', '(장학) 저소득', '(장학) 통계조사 미반영',
+            ],
+    '학기': sorted(df_chart['학기'].unique())}
+
+# content1
 
 # 차트 유형 정렬을 위한 순서 지정
 dict_category_order = {
@@ -86,51 +100,90 @@ fig_area_1 = px.bar(df_chart.replace({'유형':
                                             '재난': '(장학) 재난',
                                             '저소득': '(장학) 저소득',
                                             '통계조사 미반영': '(장학) 통계조사 미반영'
-                                            }}),
-
-                    x="학기", y="수혜금액", color='유형', barmode="stack"
+                                            }})
+                    , y="학기", x="수혜금액", color='유형', barmode="stack"
                     , category_orders=dict_category_order
                     , hover_data={'유형': True, '학기': True, '수혜금액': True}
+                    , orientation='h'
                     )
 
-fig_area_1.update_xaxes(
-    tickangle=0,  # x 눈금명 각도
-    title_text="<b>학기</b>",
-    title_font={"size": 18},
-    title_standoff=21)  # title 떨어져있는 정도
-
 fig_area_1.update_yaxes(
+    tickangle=0,  # x 눈금명 각도
+    # title_text="<b>학기</b>",
+    # title_font={"size": 18},
+    title=None,
+    ticksuffix="    "
+    # title_standoff=21  # title 떨어져있는 정도
+)
+
+fig_area_1.update_xaxes(
     tickangle=0,  # y 눈금명 각도
     title_text="<b>수혜금액</b>",
-    title_font={"size": 18},
-    title_standoff=21,  # title 떨어져있는 정도
+    title_font={"size": 16, 'family': "NanumSquare"},
+    # title_standoff=21,  # title 떨어져있는 정도
     tickformat=","  # d3-format (파이썬 format이 아닌 듯)
 )
 
-if df_chart.empty:
-    fig_area_1.update_layout(
-        font={'family': 'NanumGothic'},
-        annotations=[dict(
-            text="장학금 및 연구비 수혜 내역이 없습니다.",
-            x=2.5, y=1.5,
-            xanchor="center", yanchor="middle",
-            showarrow=False,
-            font=dict(color="#252930", size=32, family="NanumGothic")
-        )])
-else:
-    fig_area_1.update_layout(
-        font={'family': 'NanumGothic'})
+fig_area_1.update_layout(
+    title=dict(
+        text="<b>학기</b>",
+        font={'family': "NanumSquare", 'size': 18},
+        y=0.93
+    ),
+    
+    legend=dict(
+        orientation="h",
+        # yanchor="bottom",
+        y=-0.3,
+        # xanchor="right",
+        x=-0.15,
+        title_font_family="NanumSquare",
+        font=dict(
+            family="NanumSquare",
+            size=14,
+            color="black"
+        )
+    ),
 
-'''
+    margin=dict(l=100)
+)
+
+
 # 수혜금액 항목에 comma(,)와 ￦를 표시한 dataframe으로 대치
 # df['수혜금액'] 의 형식이 int32 -> object로 변하기 때문에 따로 copy()해서 처리하였다.
 df_chart_comma = df_chart.copy()
 df_chart_comma.loc[:, "수혜금액"] = '￦ ' + df_chart_comma["수혜금액"].map('{:,.0f}'.format)
 
-table_1 = dbc.Table.from_dataframe(df_chart_comma, striped=True, bordered=True
-                                    , hover=True, dark=True, responsive=True, color="secondary"
+# table-1
+table_1 = dbc.Table.from_dataframe(df_chart_comma
+                                    , striped=True       # 행마다 음영 넣기
+                                    , bordered=False     # 표와 칸에 선 넣기
+                                    , borderless=True    # 세로선도 없애기
+                                #    , hover=True
+                                #    , dark=True
+                                    , responsive=True
+                                #    , color="secondary"
+                                    , style={
+                                        # "border": "2px solid #0F491B",
+                                        # "border-top-right-radius": "15px",
+                                        # "border-top-left-radius": "15px",
+                                    #    "border-radius": "10px",
+                                    #    "background": "#FFF",
+                                    #    "border-style": "hidden",
+                                       "border-collapse": "collapse",
+                                    #    "box-shadow": "0 0 0 1px #000"
+                                        }
                                     )
-'''
+
+header_style = {
+    'background-color': '#0F491B',
+    'color': 'white',  # You can adjust the text color as needed
+    'text-align': 'center'
+}
+
+for header in table_1.children[0].children[0].children:
+    header.style = header_style
+
 
 # Dash Layout
 dash_app.layout = html.Div(children=[
@@ -180,17 +233,22 @@ dash_app.layout = html.Div(children=[
                      className='summary-box'
         ),
 
-        html.Figure(dcc.Graph(id='example-graph', figure=fig_area_1),
-                 className='plot-area'
+        html.Figure(children=[
+                        dcc.Graph(id='example-graph', figure=fig_area_1),
+                        html.Br(),
+                        html.Div(children=[table_1], className='table-area-1'),
+                        html.Br()
+                    ],
+                    className='plot-area'
         )
+
+        
 
         ],
         className='main-area'
     )
 
 ])
-
-
 
 
 
