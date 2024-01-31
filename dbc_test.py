@@ -5,7 +5,8 @@ import pandas as pd
 import plotly.graph_objs as go
 import plotly.express as px
 from dash import Input, Output, dcc, html
-from fig_area_1 import fig_area_1
+from src.fig_area_1 import fig_area_1
+from src.table_1 import table_1
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
@@ -21,99 +22,14 @@ dict_category_order = {
     '학기': sorted(df_chart['학기'].unique())}
 
 # content1
-fig_area_1 = px.bar(df_chart.replace({'유형':
-                                            {'월인건비': '(연구) 월인건비',
-                                            '연구수당': '(연구) 연구수당',
-                                            '근로': '(장학) 근로',
-                                            '국가장학': '(장학) 국가장학',
-                                            '기타': '(장학) 기타',
-                                            '성적우수': '(장학) 성적우수',
-                                            '교직원': '(장학) 교직원',
-                                            '재난': '(장학) 재난',
-                                            '저소득': '(장학) 저소득',
-                                            '통계조사 미반영': '(장학) 통계조사 미반영'
-                                            }})
-                    , y="학기", x="수혜금액", color='유형', barmode="stack"
-                    , category_orders=dict_category_order
-                    , hover_data={'유형': True, '학기': True, '수혜금액': True}
-                    , orientation='h'
-                    )
-
-fig_area_1.update_yaxes(
-    tickangle=0,  # x 눈금명 각도
-    # title_text="<b>학기</b>",
-    # title_font={"size": 18},
-    title=None,
-    ticksuffix="    "
-    # title_standoff=21  # title 떨어져있는 정도
-)
-
-fig_area_1.update_xaxes(
-    tickangle=0,  # y 눈금명 각도
-    title_text="<b>수혜금액</b>",
-    title_font={"size": 16, 'family': "NanumSquare"},
-    # title_standoff=21,  # title 떨어져있는 정도
-    tickformat=","  # d3-format (파이썬 format이 아닌 듯)
-)
-
-fig_area_1.update_layout(
-    title=dict(
-        text="<b>학기</b>",
-        font={'family': "NanumSquare", 'size': 18},
-        y=0.93
-    ),
-    
-    legend=dict(
-        orientation="h",
-        # yanchor="bottom",
-        y=-0.3,
-        # xanchor="right",
-        x=-0.15,
-        title_font_family="NanumSquare",
-        font=dict(
-            family="NanumSquare",
-            size=14,
-            color="black"
-        )
-    ),
-
-    margin=dict(l=100)
-)
+fig_area_1 = fig_area_1(df_chart)
 
 df_chart_comma = df_chart.copy()
 df_chart_comma['수혜금액'] = df_chart_comma['수혜금액'].astype('object')
 df_chart_comma.loc[:, "수혜금액"] = '￦ ' + df_chart_comma["수혜금액"].map('{:,.0f}'.format)
 
 # table-1
-table_1 = dbc.Table.from_dataframe(df_chart_comma
-                                    , striped=True       # 행마다 음영 넣기
-                                    , bordered=False     # 표와 칸에 선 넣기
-                                    , borderless=True    # 세로선도 없애기
-                                #    , hover=True
-                                #    , dark=True
-                                    , responsive=True
-                                #    , color="secondary"
-                                    , style={
-                                        # "border": "2px solid #0F491B",
-                                        # "border-top-right-radius": "15px",
-                                        # "border-top-left-radius": "15px",
-                                    #    "border-radius": "10px",
-                                    #    "background": "#FFF",
-                                    #    "border-style": "hidden",
-                                    "border-collapse": "collapse",
-                                    #    "box-shadow": "0 0 0 1px #000"
-                                        }
-                                    )
-
-header_style = {
-    'background-color': '#0F491B',
-    'color': 'white',  # You can adjust the text color as needed
-    'text-align': 'center'
-}
-
-for header in table_1.children[0].children[0].children:
-    header.style = header_style
-
+table_1 = table_1(df_chart)
 
 
 app.layout = dbc.Container(
