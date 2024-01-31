@@ -5,6 +5,7 @@ import pandas as pd
 import plotly.graph_objs as go
 import plotly.express as px
 from dash import Input, Output, dcc, html
+from fig_area_1 import fig_area_1
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
