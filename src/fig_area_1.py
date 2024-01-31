@@ -1,6 +1,6 @@
 import plotly.express as px
 
-def fig_area_1(df_chart):
+def fig_area_1(df):
 
     # 차트 유형 정렬을 위한 순서 지정
     dict_category_order = {
@@ -8,10 +8,10 @@ def fig_area_1(df_chart):
                 '(장학) 근로', '(장학) 국가장학', '(장학) 기타', '(장학) 성적우수', '(장학) 교직원',
                 '(장학) 재난', '(장학) 저소득', '(장학) 통계조사 미반영',
                 ],
-        '학기': sorted(df_chart['학기'].unique())}
+        '학기': sorted(df['학기'].unique())}
 
     # content1
-    fig_area_1 = px.bar(df_chart.replace({'유형':
+    fig_area_1 = px.bar(df.replace({'유형':
                                                 {'월인건비': '(연구) 월인건비',
                                                 '연구수당': '(연구) 연구수당',
                                                 '근로': '(장학) 근로',
