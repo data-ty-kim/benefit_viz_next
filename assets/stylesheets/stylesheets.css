@@ -153,3 +153,74 @@
     margin-right: 15px;
     border-radius: 10px 10px 10px 10px;
   }
+
+
+
+/*
+Dash Bootstrap CSS 적용하기
+지현 쌤의 1rem = 14px
+시스템 폰트는 1rem=16px로 되어 있는 듯하다
+viewport: 390px × 844px
+*/  
+
+  .dbc-header-title {
+    color: #000;
+    text-align: center;
+    font-size: 1.125rem;
+    font-style: normal;
+    font-weight: 800;
+    margin-top: 4.7857rem;
+    margin-bottom: 1.6429rem;
+  }
+
+  .nav {
+    justify-content: space-between;
+    flex-wrap: nowrap;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #000;
+    border-radius: 0.5rem;
+    background: #F4F4F4;
+    width: 29.2308vw; /*114px*/
+    height: 6.1611vh; /*52px*/
+    letter-spacing: -0.408px;
+    flex-shrink: 0;
+    /* padding: 0.3214rem 0.5714rem; */
+    padding: 0px 0px;
+  }
+
+  .nav-link:hover {
+    /* hover shadow */
+    color: #7052EF;
+    box-shadow: 2px 4px 20px 0px rgba(0, 0, 0, 0.11);
+  }
+
+  .nav-pills {
+    --bs-nav-pills-border-radius: 0.5rem;
+    --bs-nav-pills-link-active-bg: #F15C6A;
+  }
+
+  .dbc-summary {
+    font-size: 0.875rem;
+    margin-top: 4.0284vh; /*34px*/
+    margin-bottom: 1.6588vh; /*14px*/
+  }
+
+  .dbc-content {
+    border-radius: 1.25rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    background: #FFF;
+    /* shadow1 */
+    box-shadow: 0px 8px 64px 0px rgba(15, 34, 67, 0.06);
+  }
+
+  .dash-debug-menu {
+    width: 32px !important;
+    height: 32px !important;
+  }

@@ -24,7 +24,7 @@ def table_1(df):
 
     header_style = {
         'background-color': '#0F491B',
-        'color': 'white',  # You can adjust the text color as needed
+        'color': 'white', 
         'text-align': 'center'
     }
 
