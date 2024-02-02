@@ -23,7 +23,7 @@ def table_1(df):
                                         )
 
     header_style = {
-        'background-color': '#0F491B',
+        'background-color': '#F15C6A',
         'color': 'white', 
         'text-align': 'center'
     }

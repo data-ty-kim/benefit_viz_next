@@ -220,7 +220,14 @@ viewport: 390px × 844px
     box-shadow: 0px 8px 64px 0px rgba(15, 34, 67, 0.06);
   }
 
+  .table-striped>tbody>tr:nth-child(odd)>td {
+    --bs-table-striped-bg: #FFEFF1;
+  }
+
+
+  /* 
   .dash-debug-menu {
     width: 32px !important;
     height: 32px !important;
-  }
+  } 
+  */
