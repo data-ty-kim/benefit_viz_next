@@ -5,10 +5,17 @@ def table_2(df):
     table_2 = Table.from_dataframe(df, 
                                    striped=True, 
                                    bordered=False, 
+                                   borderless=True,
                                    hover=True, 
                                    responsive=True,
                                    style={
                                         "border-collapse": "collapse",
+                                        "color": "#241914",
+                                        "text-align": "center",
+                                        "font-size": "0.875rem",
+                                        "font-style": "normal",
+                                        "font-weight": 400,
+                                        "line-height": "normal",
                                    } 
     )
 
@@ -20,6 +27,5 @@ def table_2(df):
 
     for header in table_2.children[0].children[0].children:
         header.style = header_style
-
 
     return table_2

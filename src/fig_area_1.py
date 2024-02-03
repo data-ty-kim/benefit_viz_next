@@ -78,7 +78,6 @@ def fig_area_1(df):
                  },
             y=0.93
         ),
-        
         legend=dict(
             orientation="h",
             # yanchor="bottom",
@@ -92,12 +91,14 @@ def fig_area_1(df):
                 color="#919191"
             )
         ),
-
         margin=dict(l=100),
-
         plot_bgcolor='#fff',
+        paper_bgcolor='#fff',
+        # bargap=0.35
+    )
 
-        paper_bgcolor='#fff'
+    fig_area_1.update_traces(
+        width=0.68
     )
 
     return fig_area_1

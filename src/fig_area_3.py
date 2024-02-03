@@ -89,7 +89,7 @@ def fig_area_3(df, std_last_reg):
     threshold_label = go.layout.Annotation(
         text="<b>등록금:</b> {:,.0f}원".format(std_last_reg['tuition_fee']),
         x=0.5,
-        y=0.38,
+        y=0.5,
         showarrow=False,
         font=dict(color="#DA4167", size=14, family="NanumSquare"))
 

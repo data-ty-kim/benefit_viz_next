@@ -19,8 +19,6 @@
 
 * {
     font-family: 'NanumSquare';
-    margin: 0; 
-    padding: 0;
   }
 
   .header-container {
@@ -189,6 +187,8 @@ viewport: 390px × 844px
     background: #F4F4F4;
     width: 29.2308vw; /*114px*/
     height: 6.1611vh; /*52px*/
+    /* width: 7.125rem;
+    height: 3.3125rem; */
     letter-spacing: -0.408px;
     flex-shrink: 0;
     /* padding: 0.3214rem 0.5714rem; */
@@ -207,9 +207,44 @@ viewport: 390px × 844px
   }
 
   .dbc-summary {
-    font-size: 0.875rem;
     margin-top: 4.0284vh; /*34px*/
     margin-bottom: 1.6588vh; /*14px*/
+  }
+
+  .dbc-summary-text {
+    display: inline-block;
+    font-size: 0.875rem;
+    margin: 0px;
+  }
+
+  .dbc-info-more {
+    display: inline-block;
+  }
+ 
+  .btn {
+    --bs-btn-color: #7052EF;
+    font-family: NanumSquare;
+    --bs-btn-font-size: 0.875rem;
+    --bs-btn-font-weight: 700;
+    line-height: 1.375rem;
+    letter-spacing: -0.0255rem;
+    text-decoration: none;
+    --bs-btn-border-color: none;
+    --bs-btn-active-color: #F15C6A;
+  } 
+
+  .btn:hover {
+    color: #7052EF;
+  }  
+
+  .dbc-card-explanation {
+    padding: 0;
+    color: #000;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.375rem; /* 157.143% */
+    letter-spacing: -0.0255rem;
   }
 
   .dbc-content {
@@ -224,6 +259,25 @@ viewport: 390px × 844px
     --bs-table-striped-bg: #FFEFF1;
   }
 
+  th:first-child {
+    border-top-left-radius: 0.625rem; 
+    /* border-left: 1px solid #F15C6A;  */
+  }
+
+  th:last-child {
+    border-top-right-radius: 0.625rem;
+    /* border-right: 1px solid #F15C6A;  */
+  }
+
+  th {
+    border-left: 1px solid #FFF;
+    border-right: 1px solid #FFF;
+  }
+
+  td {
+    border-right: 1px solid #F15C6A; 
+    border-left: 1px solid #F15C6A; 
+  }
 
   /* 
   .dash-debug-menu {
