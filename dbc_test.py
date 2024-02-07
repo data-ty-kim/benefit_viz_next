@@ -3,6 +3,7 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 from numpy import arange
 from dash import Input, Output, dcc, html, State
+import plotly.graph_objects as go
 from furl import furl
 import firebase_admin
 from firebase_admin import credentials
@@ -26,38 +27,30 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 app.config.suppress_callback_exceptions = True
 
-# df_chart = pd.read_csv('./etc/df_test.csv', usecols=[1,2,3,4])
-# df_top_7 = pd.read_csv('./etc/df_table_2.csv')
-# std_last_reg = {'semester': '2022-2R', 'tuition_fee': 120000}
-
-dept = 'ㅇㅇ학과'
-
-# # content1
-# ## chart-1
-# fig_area_1 = fig_area_1(df_chart)
-
-# ## table-1
-# df_chart_comma = df_chart.copy()
-# df_chart_comma['수혜금액'] = df_chart_comma['수혜금액'].astype('object')
-# df_chart_comma.loc[:, "수혜금액"] = '￦ ' + df_chart_comma["수혜금액"].map('{:,.0f}'.format)
-# table_1 = table_1(df_chart_comma)
-
-# # content2
-# ## table-2
-# table_2 = table_2(df_top_7)
-
-# # content3
-# ## chart-2
-# fig_area_3 = fig_area_3(df_chart, std_last_reg)
-
 
 app.layout = dbc.Container(
     [
         dcc.Store(id="store"),
-        dcc.Location(id="url", refresh='callback-nav'),
-        html.Header(children=html.P('장학금 및 연구비 데이터 시각화 서비스', 
-                                    className='dbc-header-title'
-                                    ),
+        dcc.Location(id="url", refresh=False),
+        html.Header(children=[
+                html.A(html.Div(children=[
+                            html.Img(src='./assets/images/stone_left.png',
+                                     className='stone-img'
+                            ),
+                            html.P("설문 참가하기", className='survey-text'),
+                            html.Img(src='./assets/images/stone_right.png',
+                                     className='stone-img'
+                            )
+                        ],
+                        className='survey-banner'
+                    ),
+                    href="https://digital.korea.ac.kr/",
+                    className='survey-link'
+                ),
+                html.P('장학금 및 연구비 데이터 시각화 서비스', 
+                       className='dbc-header-title'
+                )
+            ],
         ),
         html.Nav(
             [
@@ -70,7 +63,7 @@ app.layout = dbc.Container(
                                     ], 
                                     # href="/chart-1",
                                     id='link-1',
-                                    active="exact"
+                                    active="partial"
                         ),
                         dbc.NavLink(children=[
                                         "학과 내 최다",
@@ -79,7 +72,7 @@ app.layout = dbc.Container(
                                     ],
                                     # href="/table",
                                     id='link-2',
-                                    active="exact"
+                                    active="partial"
                         ),
                         dbc.NavLink(children=[
                                         "등록금 대비",
@@ -88,7 +81,7 @@ app.layout = dbc.Container(
                                     ],
                                     # href="/chart-2",
                                     id='link-3',
-                                    active="exact"
+                                    active="partial"
                         ),
                     ],
                     pills=True
@@ -104,7 +97,6 @@ app.layout = dbc.Container(
                     dbc.Button(
                         "더 보기",
                         id="collapse-button",
-                        # className="mb-3",
                         color="link",
                         n_clicks=0,
                         outline=False,
@@ -122,40 +114,45 @@ app.layout = dbc.Container(
 )
 
 
+
+
+
 @app.callback(
-    [Output('link-1', 'href'),
-     Output('link-2', 'href'),
-     Output('link-3', 'href')],
-    [Input('url', 'href')]
+    Output('store', 'data'),
+    Output('link-1', 'href'),
+    Output('link-2', 'href'),
+    Output('link-3', 'href'),
+    Input('url', 'href')
 )
-def update_nav_links(href):
+def _content(href: str):
     # URL 파싱하고 key랑 dept 추출
     f = furl(href)
+
+    dict_error_message = { 
+            "content-1-1": go.Figure(data=[]),
+            "content-1-2": html.Div("잘못된 링크로 접속하셨습니다. 주소를 다시 확인해주세요."), 
+            "content-2": html.Div("잘못된 링크로 접속하셨습니다. 주소를 다시 확인해주세요."), 
+            "content-3": go.Figure(data=[])
+    }
+
+    if not f.args:
+        return dict_error_message, 'chart-1', 'table', 'chart-2'
+
+
     param1 = f.args['key']
     param2 = f.args['dpt']
-    
+    # param3 = f.args['stdID']
+
+    # doc_check_1 = db.collection('Student-Fund-Data').document(param1).get()
+    doc_check_2 = db.collection(u'Top-7-Scholarship').document(param2).get()
+
+    if not doc_check_2.exists:
+        return dict_error_message, 'chart-1', 'table', 'chart-2'
+
     # 새로운 href 생성
     href_1 = f"/chart-1?key={param1}&dpt={param2}"
     href_2 = f"/table?key={param1}&dpt={param2}"
     href_3 = f"/chart-2?key={param1}&dpt={param2}"
-    
-    return href_1, href_2, href_3
-
-
-@app.callback(
-    [Output('store', 'data')],
-    [Input('url', 'href')])
-def _content(href: str):
-    # URL 파싱하고 key랑 dept 추출
-    f = furl(href)
-    param1 = f.args['key']
-    param2 = f.args['dpt']
-    # param3 = f.args['stdID']
-    
-    # 새로운 href 생성
-    # href_1 = f"/chart-1?key={param1}&dpt={param2}"
-    # href_2 = f"/table?key={param1}&dpt={param2}"
-    # href_3 = f"/chart-2?key={param1}&dpt={param2}"
 
     # content 1
     # df의 열 설정
@@ -207,7 +204,11 @@ def _content(href: str):
     # 수혜금액 항목에 comma(,)와 ￦를 표시한 dataframe으로 대치
     # df['수혜금액'] 의 형식이 int32 -> object로 변하기 때문에 따로 copy()해서 처리하였다.
     df_chart_comma = df_chart.copy()
-    df_chart_comma.loc[:, "수혜금액"] = '￦ ' + df_chart_comma["수혜금액"].map('{:,.0f}'.format)
+    df_chart_comma.loc[:, "수혜금액"] = df_chart_comma["수혜금액"].map('{:,.0f}'.format)
+
+    # 차트와 표 생성
+    show_part_1_1 = fig_area_1(df_chart)
+    show_part_1_2 = table_1(df_chart_comma)
 
     # content 2
     # 소속학과의 장학금 top7 가져오기
@@ -222,62 +223,55 @@ def _content(href: str):
     )
     df_already_got = df_already_got[['순위', '장학금명', '기수혜']]
 
+    # 표 생성
+    showpart_2 = table_2(df_already_got)
+
     # content 3
     # 학생의 등록금 고지 내역 가져오기
     list_std_reg = db.collection(u'Student-Registration-Record').document(param1).get().to_dict()['Registration']
     std_last_reg = list_std_reg[-1]
 
+    # 차트 생성
+    showpart_3 = fig_area_3(df_chart, std_last_reg)
+
     return {
-                                        "content-1-1": df_chart, 
-                                        "content-1-2": df_chart_comma, 
-                                        "content-2": df_already_got, 
-                                        "content-3": std_last_reg,
-                                        "param1": param1,
-                                        "param2": param2
-                                    }
+                "content-1-1": show_part_1_1,
+                "content-1-2": show_part_1_2, 
+                "content-2": showpart_2, 
+                "content-3": showpart_3,
+                "key": param1,
+                "dpt": param2
+    }, href_1, href_2, href_3
 
 
 @app.callback(
         [Output("page-content", "children"),
          Output("collapse", "children"),
          Output("page-summary", "children")], 
-        [Input("url", "href"), 
+        [Input("url", "pathname"), 
          Input("store", "data")]
 )
-def render_page_content(href, data):
-    f = furl(href)
-
-    # if not ('key' in f.args.keys() and 'dpt' in f.args.keys()):
-    #     return html.Div(
-    #                    [
-    #                    html.H1("404: Not found", className="text-danger"),
-    #                    html.Hr(),
-    #                    html.P(f"입력하신 주소 {f.url} 는 잘못된 경로입니다."),
-    #                ],
-    #                className="p-3 bg-light rounded-3",
-    #            ), "주소창에 잘못된 경로를 입력하였습니다.", "잘못된 경로"
-
-    param1 = data['param1']
-    param2 = data['param2']
-
-    if f.path == "/chart-1" and f.query == f"key={param1}&dpt={param2}":
+def render_page_content(pathname, data):
+    if pathname == "/chart-1":
         return [
-                    dcc.Graph(figure=fig_area_1(data["content-1-1"])), 
-                    dbc.Card(table_1(data["content-1-2"]), className="card-table")
+                    dcc.Graph(figure=data["content-1-1"]), 
+                    dbc.Card(data["content-1-2"], className="card-table")
                ], explanation_1, summary_1
 
-    elif f.path == "/table" and f.query == f"key={param1}&dpt={param2}":
-        return dbc.Card(table_2(data['content-2']), className="card-table"), explanation_2, summary_2(dept)
+    elif pathname == "/table":
+        return dbc.Card(data['content-2'], className="card-table"), explanation_2, summary_2
 
-    elif f.path == "/chart-2" and f.query == f"key={param1}&dpt={param2}":
-        return dcc.Graph(figure=fig_area_3(data['content-1-1'], data['content-3'])), explanation_3, summary_3
+    elif pathname == "/chart-2":
+        return dcc.Graph(figure=data['content-3']), explanation_3, summary_3
 
     # 사용자가 다른 주소로 접근시, 잘못된 경로임을 알려주기
     return html.Div(
         [
             html.H1("404: Not found", className="text-danger"),
             html.Hr(),
-            html.P(f"입력하신 주소 {f.url} 는 잘못된 경로입니다."),
+            html.P(f"입력하신 주소 {pathname} 는 잘못된 경로입니다."),
+            html.P("이메일을 통해 전달받은 올바른 주소를 입력하시면 개인 맞춤형 페이지를 확인하실 수 있습니다."),
+            html.P("감사합니다!"),
         ],
         className="p-3 bg-light rounded-3",
     ), "주소창에 잘못된 경로를 입력하였습니다.", "잘못된 경로"

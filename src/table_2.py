@@ -22,7 +22,8 @@ def table_2(df):
     header_style = {
         'background-color': '#F15C6A',
         'color': 'white',
-        'text-align': 'center'
+        'text-align': 'center',
+        # 'font-size': '0.75rem'
     }
 
     for header in table_2.children[0].children[0].children:

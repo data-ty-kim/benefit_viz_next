@@ -28,4 +28,8 @@ def table_1(df):
     for header in table_1.children[0].children[0].children:
         header.style = header_style
 
+    for row in range(df.shape[0]):
+        last_cell_style ={'text-align': 'right'}
+        table_1.children[1].children[row].children[-1].style = last_cell_style
+
     return table_1
