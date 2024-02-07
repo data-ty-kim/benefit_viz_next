@@ -260,13 +260,13 @@ viewport: 390px × 844px
   }
 
   th:first-child {
-    border-top-left-radius: 0.625rem; 
-    /* border-left: 1px solid #F15C6A;  */
+    /* border-top-left-radius: 0.625rem;  */
+    border-left: 1px solid #F15C6A; 
   }
 
   th:last-child {
-    border-top-right-radius: 0.625rem;
-    /* border-right: 1px solid #F15C6A;  */
+    /* border-top-right-radius: 0.625rem; */
+    border-right: 1px solid #F15C6A; 
   }
 
   th {
@@ -277,6 +277,13 @@ viewport: 390px × 844px
   td {
     border-right: 1px solid #F15C6A; 
     border-left: 1px solid #F15C6A; 
+  }
+
+  .card-table {
+    border-radius: 0.625rem;
+    border: 2px solid #F15C6A;
+    background: #FFF;
+    margin: 1rem;
   }
 
   /* 

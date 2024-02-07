@@ -4,8 +4,9 @@ from dash import html
 
 summary_1 = "수혜받은 장학금과 연구비를 유형과 함께 보여줍니다."
 
-def summary_2(dept):
-    return f"{dept}에서 가장 많은 학생이 받은 장학금입니다."
+summary_2 = "재학중인 학과에서 많은 학생이 받은 장학금입니다."
+# def summary_2(dept):
+#     return f"{dept}에서 가장 많은 학생이 받은 장학금입니다."
 
 summary_3 = "납부한 등록금 대비 장학금 수혜내역을 표시합니다."
 
