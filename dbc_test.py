@@ -13,6 +13,7 @@ from src.fig_area_1 import fig_area_1
 from src.table_1 import table_1
 from src.table_2 import table_2
 from src.fig_area_3 import fig_area_3
+from src.fig_area_error import fig_area_error
 from src.explanation import summary_1, summary_2, summary_3, explanation_1, explanation_2, explanation_3
 
 
@@ -37,7 +38,24 @@ app.layout = dbc.Container(
                             html.Img(src='./assets/images/stone_left.png',
                                      className='stone-img'
                             ),
-                            html.P("설문 참가하기", className='survey-text'),
+                            html.P(children=[
+                                        "설문 참가하고",
+                                        html.Br(),
+                                        html.Span("스벅",
+                                                  style={
+                                                      "color": "#2E5300",
+                                                      "font-family": "RixInooAriDuriR",
+                                                      "font-size": "1.5rem",
+                                                      "font-style": "normal",
+                                                      "font-weight": "400",
+                                                      "line-height": "1.875rem",
+                                                      "letter-spacing": "-0.0255rem",
+                                                      }
+                                        ),
+                                        " 쿠폰 받기!"
+                                    ], 
+                                   className='survey-text'
+                            ),
                             html.Img(src='./assets/images/stone_right.png',
                                      className='stone-img'
                             )
@@ -52,43 +70,40 @@ app.layout = dbc.Container(
                 )
             ],
         ),
+
         html.Nav(
             [
-                dbc.Nav(
-                    [
-                        dbc.NavLink(children=[
-                                        "장학금, 연구비",
-                                        html.Br(),
-                                        "수혜내역"
-                                    ], 
-                                    # href="/chart-1",
-                                    id='link-1',
-                                    active="partial"
-                        ),
-                        dbc.NavLink(children=[
-                                        "학과 내 최다",
-                                        html.Br(),
-                                        "수여 장학금",
-                                    ],
-                                    # href="/table",
-                                    id='link-2',
-                                    active="partial"
-                        ),
-                        dbc.NavLink(children=[
-                                        "등록금 대비",
-                                        html.Br(),
-                                        "수혜금액",
-                                    ],
-                                    # href="/chart-2",
-                                    id='link-3',
-                                    active="partial"
-                        ),
-                    ],
-                    pills=True
-                ),
+                dbc.Button(children=[
+                                "장학금, 연구비",
+                                html.Br(),
+                                "수혜내역"
+                            ], 
+                            color="link",
+                            id='link-1',
+                            className='nav-link'
 
-            ],
+                ),
+                dbc.Button(children=[
+                                "학과 내 최다",
+                                html.Br(),
+                                "수여 장학금",
+                            ],
+                            color="link",
+                            id='link-2',
+                            className='nav-link'
+                ),
+                dbc.Button(children=[
+                                "등록금 대비",
+                                html.Br(),
+                                "수혜금액",
+                            ],
+                            color="link",
+                            id='link-3',
+                            className='nav-link'
+                ),
+            ]
         ),
+
         html.Div(children=[
                     html.P(
                         id="page-summary",
@@ -119,9 +134,6 @@ app.layout = dbc.Container(
 
 @app.callback(
     Output('store', 'data'),
-    Output('link-1', 'href'),
-    Output('link-2', 'href'),
-    Output('link-3', 'href'),
     Input('url', 'href')
 )
 def _content(href: str):
@@ -129,14 +141,14 @@ def _content(href: str):
     f = furl(href)
 
     dict_error_message = { 
-            "content-1-1": go.Figure(data=[]),
+            "content-1-1": fig_area_error(),
             "content-1-2": html.Div("잘못된 링크로 접속하셨습니다. 주소를 다시 확인해주세요."), 
             "content-2": html.Div("잘못된 링크로 접속하셨습니다. 주소를 다시 확인해주세요."), 
-            "content-3": go.Figure(data=[])
+            "content-3": fig_area_error()
     }
 
     if not f.args:
-        return dict_error_message, 'chart-1', 'table', 'chart-2'
+        return dict_error_message
 
 
     param1 = f.args['key']
@@ -147,7 +159,7 @@ def _content(href: str):
     doc_check_2 = db.collection(u'Top-7-Scholarship').document(param2).get()
 
     if not doc_check_2.exists:
-        return dict_error_message, 'chart-1', 'table', 'chart-2'
+        return dict_error_message
 
     # 새로운 href 생성
     href_1 = f"/chart-1?key={param1}&dpt={param2}"
@@ -241,40 +253,58 @@ def _content(href: str):
                 "content-3": showpart_3,
                 "key": param1,
                 "dpt": param2
-    }, href_1, href_2, href_3
+    }
 
 
 @app.callback(
         [Output("page-content", "children"),
          Output("collapse", "children"),
-         Output("page-summary", "children")], 
-        [Input("url", "pathname"), 
-         Input("store", "data")]
+         Output("page-summary", "children"),
+         Output("link-1", "active"),
+         Output("link-2", "active"),
+         Output("link-3", "active")], 
+        [Input("store", "data"),
+         Input("link-1", "n_clicks"),
+         Input("link-2", "n_clicks"),
+         Input("link-3", "n_clicks")]
 )
-def render_page_content(pathname, data):
-    if pathname == "/chart-1":
+def render_page_content(data, link_1_click, link_2_click, link_3_click):
+    ctx = dash.callback_context
+    clicked_button_id = ctx.triggered_id.split('.')[0]
+
+    if not clicked_button_id:
+         return [
+                    dcc.Graph(figure=data["content-1-1"]), 
+                    dbc.Card(data["content-1-2"], className="card-table")
+               ], explanation_1, summary_1, True, False, False
+
+    elif clicked_button_id == "link-1":
         return [
                     dcc.Graph(figure=data["content-1-1"]), 
                     dbc.Card(data["content-1-2"], className="card-table")
-               ], explanation_1, summary_1
+               ], explanation_1, summary_1, True, False, False
 
-    elif pathname == "/table":
-        return dbc.Card(data['content-2'], className="card-table"), explanation_2, summary_2
+    elif clicked_button_id == "link-2":
+        return dbc.Card(
+                    data['content-2'], className="card-table"
+                ), explanation_2, summary_2, False, True, False
 
-    elif pathname == "/chart-2":
-        return dcc.Graph(figure=data['content-3']), explanation_3, summary_3
+    elif clicked_button_id == "link-3":
+        return dcc.Graph(
+                    figure=data['content-3']
+                ), explanation_3, summary_3, False, False, True
 
     # 사용자가 다른 주소로 접근시, 잘못된 경로임을 알려주기
     return html.Div(
         [
             html.H1("404: Not found", className="text-danger"),
             html.Hr(),
-            html.P(f"입력하신 주소 {pathname} 는 잘못된 경로입니다."),
+            html.P(f"입력하신 주소는 잘못된 경로입니다."),
             html.P("이메일을 통해 전달받은 올바른 주소를 입력하시면 개인 맞춤형 페이지를 확인하실 수 있습니다."),
             html.P("감사합니다!"),
         ],
         className="p-3 bg-light rounded-3",
-    ), "주소창에 잘못된 경로를 입력하였습니다.", "잘못된 경로"
+    ), "주소창에 잘못된 경로를 입력하였습니다.", "잘못된 경로", False, False, False
 
 
 @app.callback(
@@ -289,4 +319,4 @@ def toggle_collapse(n, is_open):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True, port=8800) # 나중에 서버 올릴 때는 debug=False로 하기!
+    app.run_server(debug=False, port=8800) # 나중에 서버 올릴 때는 debug=False로 하기!
