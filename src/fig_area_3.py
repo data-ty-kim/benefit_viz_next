@@ -109,7 +109,7 @@ def fig_area_3(df, std_last_reg):
     )
 
     fig_area_3.add_annotation(
-                text=f'직전 학기<br>등록금',
+                text=f'직전 학기<br>등록금<br>{tuition_fee:,} 원',
                 x=tuition_fee,
                 xshift=0,
                 y=0.07,
@@ -121,17 +121,17 @@ def fig_area_3(df, std_last_reg):
                 )
     )
 
-    fig_area_3.add_annotation(
-                text=f'({tuition_fee:,} 원)',
-                x=tuition_fee,
-                xshift=65,
-                y=0.1,
-                yref="paper",
-                showarrow=False,
-                font=dict(family="NanumSquareRound",
-                          size=14, 
-                          color="rgba(37, 43, 65, 0.64)"
-                )
-    )
+    # fig_area_3.add_annotation(
+    #             text=f'({tuition_fee:,} 원)',
+    #             x=tuition_fee,
+    #             xshift=65,
+    #             y=0.1,
+    #             yref="paper",
+    #             showarrow=False,
+    #             font=dict(family="NanumSquareRound",
+    #                       size=14, 
+    #                       color="#AA52EF"
+    #             )
+    # )
 
     return fig_area_3

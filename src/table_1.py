@@ -11,7 +11,7 @@ def table_1(df):
                                    style={
                                         "border-collapse": "collapse",
                                         "color": "#241914",
-                                        # "text-align": "center",
+                                        "text-align": "center",
                                         "font-size": "0.875rem",
                                         "font-style": "normal",
                                         "font-weight": 400,
