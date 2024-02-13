@@ -101,4 +101,19 @@ def fig_area_1(df):
         width=0.68
     )
 
+    df_sum_of_stack = df.groupby('학기')['수혜금액'].sum()
+    df_sum_of_stack.sort_index(inplace=True)
+
+    for semester, amount in zip(df_sum_of_stack.index, df_sum_of_stack.values):
+        fig_area_1.add_annotation(
+                x=amount,
+                y=semester,
+                text=f'{amount:,} 원',
+                showarrow=False,
+                xshift=50,
+                font=dict(family="NanumSquareRound", 
+                          color="rgba(37, 43, 65, 0.64)"
+                )
+        )
+
     return fig_area_1

@@ -289,4 +289,4 @@ def toggle_collapse(n, is_open):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True, port=8800)
+    app.run_server(debug=True, port=8800) # 나중에 서버 올릴 때는 debug=False로 하기!
