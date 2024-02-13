@@ -92,29 +92,45 @@ def fig_area_3(df, std_last_reg):
     )
 
     total_sum = df['수혜금액'].sum()
+    tuition_fee = std_last_reg['tuition_fee']
 
     fig_area_3.add_annotation(
                 x=total_sum,
                 y=std_last_reg['semester'],
-                text=f'{total_sum:,} 원',
+                text=f'총 수혜금액<br>{total_sum:,} 원',
                 showarrow=False,
-                xshift=50,
+                # xshift=50,
+                xshift=-35,
+                yshift=63,
                 font=dict(family="NanumSquareRound", 
-                        color="rgba(37, 43, 65, 0.64)"
+                          size=14,
+                          color="rgba(37, 43, 65, 0.64)"
                 )
     )
 
     fig_area_3.add_annotation(
-                x=std_last_reg['tuition_fee'],
-                # y=std_last_reg['semester'],
                 text=f'직전 학기<br>등록금',
-                showarrow=False,
+                x=tuition_fee,
                 xshift=0,
                 y=0.07,
                 yref="paper",
+                showarrow=False,
                 font=dict(family="NanumSquareRound",
-                        size=14, 
-                        color="rgba(37, 43, 65, 0.64)"
+                          size=14, 
+                          color="rgba(37, 43, 65, 0.64)"
+                )
+    )
+
+    fig_area_3.add_annotation(
+                text=f'({tuition_fee:,} 원)',
+                x=tuition_fee,
+                xshift=65,
+                y=0.1,
+                yref="paper",
+                showarrow=False,
+                font=dict(family="NanumSquareRound",
+                          size=14, 
+                          color="rgba(37, 43, 65, 0.64)"
                 )
     )
 

@@ -68,34 +68,45 @@ def fig_area_1(df):
         # showticklabels=False,
     )
 
-    fig_area_1.update_layout(
-        title=dict(
-            text="<b>학기</b>",
-            font={
-                    'family': "NanumSquare", 
-                    'size': 18, 
-                    'color': '#000'
-                 },
-            y=0.93
-        ),
-        legend=dict(
-            orientation="h",
-            # yanchor="bottom",
-            y=-0.3,
-            # xanchor="right",
-            x=-0.15,
-            title_font_family="NanumSquare",
-            font=dict(
-                family="NanumSquare",
-                size=14,
-                color="#919191"
-            )
-        ),
-        margin=dict(l=100),
-        plot_bgcolor='#fff',
-        paper_bgcolor='#fff',
-        # bargap=0.35
-    )
+    if df.empty:
+        fig_area_1.update_layout(
+            font={'family': 'NanumSquare'},
+            annotations=[dict(
+                text="장학금 및 연구비 수혜 내역이 없습니다.",
+                x=2.5, y=1.5,
+                xanchor="center", yanchor="middle",
+                showarrow=False,
+                font=dict(color="#252930", size=32, family="NanumSquare")
+            )])
+    else:
+        fig_area_1.update_layout(
+            title=dict(
+                text="<b>학기</b>",
+                font={
+                        'family': "NanumSquare", 
+                        'size': 18, 
+                        'color': '#000'
+                    },
+                y=0.93
+            ),
+            legend=dict(
+                orientation="h",
+                # yanchor="bottom",
+                y=-0.3,
+                # xanchor="right",
+                x=-0.15,
+                title_font_family="NanumSquare",
+                font=dict(
+                    family="NanumSquare",
+                    size=14,
+                    color="#919191"
+                )
+            ),
+            margin=dict(l=100),
+            plot_bgcolor='#fff',
+            paper_bgcolor='#fff',
+            # bargap=0.35
+        )
 
     fig_area_1.update_traces(
         width=0.68

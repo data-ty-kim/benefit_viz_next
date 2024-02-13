@@ -182,17 +182,17 @@ viewport: 390px × 844px
     /* -webkit-text-stroke-width: 1;
     -webkit-text-stroke-color: #FFF; */
     font-family: RixInooAriDuriR;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-style: normal;
     font-weight: 400;
-    line-height: 1.375rem; /* 68.75% */
+    line-height: 1.875rem; /* 125% */
     letter-spacing: -0.0255rem;
     margin:0;
   }
 
   .stone-img {
-    width: 2.375rem;
-    height: 2.75319rem;
+    width: 4.27969rem;
+    height: 3.71819rem;
     flex-shrink: 0;
     margin-left: 0.88rem;
     margin-right: 0.88rem;
@@ -223,9 +223,10 @@ viewport: 390px × 844px
     margin-bottom: 1.44rem;
   }
 
-  .nav {
+  nav {
     justify-content: space-between;
     flex-wrap: nowrap;
+    display: flex;
   }
 
   .nav-link {
@@ -249,14 +250,33 @@ viewport: 390px × 844px
   }
 
   .nav-link:hover {
-    /* hover shadow */
     color: #7052EF;
     box-shadow: 2px 4px 20px 0px rgba(0, 0, 0, 0.11);
   }
 
-  .nav-pills {
-    --bs-nav-pills-border-radius: 0.5rem;
-    --bs-nav-pills-link-active-bg: #F15C6A;
+  .btn {
+    /* --bs-btn-color: #7052EF; */
+    font-family: NanumSquare;
+    --bs-btn-font-size: 0.875rem;
+    --bs-btn-font-weight: 700;
+    line-height: 1.375rem;
+    letter-spacing: -0.0255rem;
+    text-decoration: none;
+    --bs-btn-border-color: none;
+    --bs-btn-active-color: #F15C6A;
+  } 
+
+  .btn.active {
+    color: #FFF;
+    text-align: center;
+    font-family: NanumSquare;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 1.375rem; /* 157.143% */
+    letter-spacing: -0.0255rem;
+    background-color: #F15C6A;
+    border-radius: 0.5rem;
   }
 
   .dbc-summary {
@@ -273,22 +293,6 @@ viewport: 390px × 844px
   .dbc-info-more {
     display: inline-block;
   }
- 
-  .btn {
-    --bs-btn-color: #7052EF;
-    font-family: NanumSquare;
-    --bs-btn-font-size: 0.875rem;
-    --bs-btn-font-weight: 700;
-    line-height: 1.375rem;
-    letter-spacing: -0.0255rem;
-    text-decoration: none;
-    --bs-btn-border-color: none;
-    --bs-btn-active-color: #F15C6A;
-  } 
-
-  .btn:hover {
-    color: #7052EF;
-  }  
 
   .dbc-card-explanation {
     padding: 0;
@@ -331,26 +335,9 @@ viewport: 390px × 844px
     /* border-right: 1px solid #F15C6A;  */
   }
 
-  /* th {
-    border-left: 1px solid #FFF;
-    border-right: 1px solid #FFF;
-  }
-
-  td {
-    border-right: 1px solid #F15C6A; 
-    border-left: 1px solid #F15C6A; 
-  }
-*/
   .card-table {
     border-radius: 0.7rem;
     /* border: 2px solid #F15C6A; */
     background: #FFF;
     margin: 1rem;
   } 
-
-  /* 
-  .dash-debug-menu {
-    width: 32px !important;
-    height: 32px !important;
-  } 
-  */
