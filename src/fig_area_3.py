@@ -75,7 +75,7 @@ def fig_area_3(df, std_last_reg):
                 text=(
                     f'<span style="font-size: 1.4rem">마지막 등록 학기<br>'
                   +  '수혜 내역이 없습니다.<br>'
-                  + f'<sup>최근 납부 등록금 {tuition_fee:,} 원</sup></span>'
+                  + f'<sup>{semester} 등록금 {tuition_fee:,} 원</sup></span>'
                 ),
                 x=2.5, y=1.5,
                 xanchor="center", yanchor="middle",
