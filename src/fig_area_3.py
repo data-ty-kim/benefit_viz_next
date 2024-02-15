@@ -73,15 +73,22 @@ def fig_area_3(df, std_last_reg):
             font={'family': 'NanumSquare'},
             annotations=[dict(
                 text=(
-                    f'<span style="font-size: 1.5rem">마지막 등록 학기<br>'
+                    f'<span style="font-size: 1.4rem">마지막 등록 학기<br>'
                   +  '수혜 내역이 없습니다.<br>'
-                  + f'<sup>마지막 등록 학기 등록금 {tuition_fee:,} 원</sup></span>'
+                  + f'<sup>최근 납부 등록금 {tuition_fee:,} 원</sup></span>'
                 ),
                 x=2.5, y=1.5,
                 xanchor="center", yanchor="middle",
                 showarrow=False,
                 font=dict(color="#252930", size=32, family="NanumSquare")
-            )])
+            )],
+            xaxis=dict(
+                autorange=False
+            ),
+            yaxis=dict(
+                autorange=False
+            )
+        )
 
     else:
         fig_area_3.update_layout(
