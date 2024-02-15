@@ -8,7 +8,6 @@ from furl import furl
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
-# from src.common.common_util import path_to_project_root
 from src.fig_area_1 import fig_area_1
 from src.table_1 import table_1
 from src.table_2 import table_2
@@ -17,12 +16,7 @@ from src.fig_area_error import fig_area_error
 from src.explanation import summary_1, summary_2, summary_3, explanation_1, explanation_2, explanation_3
 
 
-# root_dir = path_to_project_root('benefit_viz_next')
-# cred = credentials.Certificate(
-#                 f'{root_dir}/config/datahub-firebase-adminsdk.json'
-# )
-
-cred = credentials.Certificate('./config/datahub-firebase-adminsdk.json')
+cred = credentials.Certificate('./config/smartku-firebase-adminsdk.json')
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
