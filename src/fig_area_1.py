@@ -72,7 +72,7 @@ def fig_area_1(df):
         fig_area_1.update_layout(
             font={'family': 'NanumSquare'},
             annotations=[dict(
-                text="장학금 및 연구비 수혜 내역이 없습니다.",
+                text="<span style='font-size: 1.5rem'>장학금 및 연구비<br>수혜 내역이 없습니다.</span>",
                 x=2.5, y=1.5,
                 xanchor="center", yanchor="middle",
                 showarrow=False,

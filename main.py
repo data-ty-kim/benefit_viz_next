@@ -308,7 +308,15 @@ def render_page_content(data, link_1_click, link_2_click, link_3_click):
                     "를 고도화시킨 서비스입니다."
                    ]
             ),
-            html.P("찬찬히 서비스 이용해보신 후, 꼭 상단의 배너를 누르셔서 설문조사에 응해주시길 부탁드립니다."),
+            html.P(children=["찬찬히 서비스 이용해보신 후, 꼭 ",
+                             html.Span("상단의 배너", 
+                                       style={"color": "#F15C6A", "font-weight": "600"}
+                             ),
+                             "를 누르셔서 ",
+                             html.Span("설문조사", 
+                                       style={"color": "#2E5300", "font-weight": "600"}
+                             ),
+                             "에 응해주시길 부탁드립니다."]),
             html.P("감사합니다!"),
         ],
         className="p-3 bg-light rounded-3",
