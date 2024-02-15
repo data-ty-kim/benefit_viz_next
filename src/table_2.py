@@ -2,6 +2,9 @@ from dash_bootstrap_components import Table
 
 
 def table_2(df):
+    if df.empty:
+        df.loc[0] = ['※','2020년 이후로 해당 학과에서 수여한 장학금이 없습니다.','※']
+
     table_2 = Table.from_dataframe(df, 
                                    striped=True, 
                                    bordered=False, 

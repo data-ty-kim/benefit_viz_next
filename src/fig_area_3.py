@@ -27,6 +27,9 @@ def fig_area_3(df, std_last_reg):
     )
 
     df = df.loc[df['학기'] == std_last_reg['semester'], :]
+    total_sum = df['수혜금액'].sum()
+    tuition_fee = std_last_reg['tuition_fee']
+    semester = std_last_reg['semester']
 
     # content1
     fig_area_3 = px.bar(df,
@@ -65,73 +68,69 @@ def fig_area_3(df, std_last_reg):
         gridcolor='rgba(53, 82, 151, 0.13)',
     )
 
-    fig_area_3.update_layout(
-        legend=dict(
-            orientation="h",
-            y=-0.3,
-            x=-0.15,
-            title_font_family="NanumSquare",
-            font=dict(
-                family="NanumSquare",
-                size=14,
-                color="#919191"
-            )
-        ),
-        plot_bgcolor='#fff',
-        paper_bgcolor='#fff',
-    )
-
-    fig_area_3.update_traces(
-        width=0.35
-    )
-
-    fig_area_3.add_vline(x=std_last_reg['tuition_fee'], 
-                        line_width=3, 
-                        line_dash="dash", 
-                        line_color="grey"
-    )
-
-    total_sum = df['수혜금액'].sum()
-    tuition_fee = std_last_reg['tuition_fee']
-
-    fig_area_3.add_annotation(
-                x=total_sum,
-                y=std_last_reg['semester'],
-                text=f'총 수혜금액<br>{total_sum:,} 원',
+    if df.empty:
+        fig_area_3.update_layout(
+            font={'family': 'NanumSquare'},
+            annotations=[dict(
+                text=f"마지막 등록 학기 수혜 내역이 없습니다.<br><sup>{semester} 학기 등록금 {tuition_fee:,} 원</sup>",
+                x=2.5, y=1.5,
+                xanchor="center", yanchor="middle",
                 showarrow=False,
-                # xshift=50,
-                xshift=-35,
-                yshift=63,
-                font=dict(family="NanumSquareRound", 
-                          size=14,
-                          color="rgba(37, 43, 65, 0.64)"
-                )
-    )
+                font=dict(color="#252930", size='2rem', family="NanumSquare")
+            )])
 
-    fig_area_3.add_annotation(
-                text=f'직전 학기<br>등록금<br>{tuition_fee:,} 원',
-                x=tuition_fee,
-                xshift=0,
-                y=0.07,
-                yref="paper",
-                showarrow=False,
-                font=dict(family="NanumSquareRound",
-                          size=14, 
-                          color="rgba(37, 43, 65, 0.64)"
+    else:
+        fig_area_3.update_layout(
+            legend=dict(
+                orientation="h",
+                y=-0.3,
+                x=-0.15,
+                title_font_family="NanumSquare",
+                font=dict(
+                    family="NanumSquare",
+                    size=14,
+                    color="#919191"
                 )
-    )
+            ),
+            plot_bgcolor='#fff',
+            paper_bgcolor='#fff',
+        )
 
-    # fig_area_3.add_annotation(
-    #             text=f'({tuition_fee:,} 원)',
-    #             x=tuition_fee,
-    #             xshift=65,
-    #             y=0.1,
-    #             yref="paper",
-    #             showarrow=False,
-    #             font=dict(family="NanumSquareRound",
-    #                       size=14, 
-    #                       color="#AA52EF"
-    #             )
-    # )
+        fig_area_3.update_traces(
+            width=0.35
+        )
+
+        fig_area_3.add_vline(x=std_last_reg['tuition_fee'], 
+                            line_width=3, 
+                            line_dash="dash", 
+                            line_color="grey"
+        )
+
+        fig_area_3.add_annotation(
+                    x=total_sum,
+                    y=std_last_reg['semester'],
+                    text=f'총 수혜금액<br>{total_sum:,} 원',
+                    showarrow=False,
+                    # xshift=50,
+                    xshift=-35,
+                    yshift=63,
+                    font=dict(family="NanumSquareRound", 
+                            size=14,
+                            color="rgba(37, 43, 65, 0.64)"
+                    )
+        )
+
+        fig_area_3.add_annotation(
+                    text=f'직전 학기<br>등록금<br>{tuition_fee:,} 원',
+                    x=tuition_fee,
+                    xshift=0,
+                    y=0.07,
+                    yref="paper",
+                    showarrow=False,
+                    font=dict(family="NanumSquareRound",
+                            size=14, 
+                            color="rgba(37, 43, 65, 0.64)"
+                    )
+        )
 
     return fig_area_3

@@ -10,6 +10,9 @@ summary_2 = "재학중인 학과에서 많은 학생이 받은 장학금입니�
 
 summary_3 = "납부한 등록금 대비 장학금 수혜내역을 표시합니다."
 
+summary_4 = "장학금 및 연구비 정보를 보여주는 위의 단추를 눌러보세요."
+
+
 explanation_1 = Card(
                 CardBody(
                     children=[
@@ -47,11 +50,25 @@ explanation_3 = Card(
                     html.P("마지막으로 납부한 등록금(또는 수료연구 등록금) 대비 연구비 및 장학금 수혜내역을 표시합니다.", 
                            className='mb-1'
                     ),
-                    html.P("빨간선은 해당 학기에 납부한 등록금액을 의미하며 수혜금액과 비교 파악할 수 있습니다",
+                    html.P("회색 세로선은 해당 학기에 납부한 등록금액을 의미하며 수혜금액과 비교 파악할 수 있습니다",
                            className='mb-1'
                     ),
                     html.P("수혜내역의 색상은 하단 범례를 통해 어떤 유형인지 확인할 수 있습니다."),
                     ],
+                    className='dbc-card-explanation'
+                ),
+                style={
+                        'background-color': 'white', 
+                        'border': 'none'
+                }
+)
+
+explanation_4 = Card(
+                CardBody(
+                    children=[
+                    html.P("각 차트 화면에서도 '더 보기'를 누르시면 각 차트별 자세한 설명을 볼 수 있습니다.", 
+                           className='mb-1'
+                    )],
                     className='dbc-card-explanation'
                 ),
                 style={

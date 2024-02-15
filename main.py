@@ -13,7 +13,8 @@ from src.table_1 import table_1
 from src.table_2 import table_2
 from src.fig_area_3 import fig_area_3
 from src.fig_area_error import fig_area_error
-from src.explanation import summary_1, summary_2, summary_3, explanation_1, explanation_2, explanation_3
+from src.explanation import summary_1, summary_2, summary_3, summary_4
+from src.explanation import explanation_1, explanation_2, explanation_3, explanation_4
 
 
 cred = credentials.Certificate('./config/smartku-firebase-adminsdk.json')
@@ -58,8 +59,10 @@ app.layout = dbc.Container(
                         ],
                         className='survey-banner'
                     ),
-                    href="https://digital.korea.ac.kr/",
-                    className='survey-link'
+                    className='survey-link',
+                    target='_blank',
+                    rel='noreferrer noopener',
+                    id='survey'
                 ),
                 html.P('장학금 및 연구비 데이터 시각화 서비스', 
                        className='dbc-header-title'
@@ -130,6 +133,7 @@ app.layout = dbc.Container(
 
 @app.callback(
     Output('store', 'data'),
+    Output('survey', 'href'),
     Input('url', 'href')
 )
 def _content(href: str):
@@ -143,24 +147,26 @@ def _content(href: str):
             "content-3": fig_area_error()
     }
 
+    # 사용자가 다른 주소로 접근 시, 잘못된 경로임을 알려주기
     if not f.args:
-        return dict_error_message
+        href_survey = f"https://docs.google.com/forms/d/e/1FAIpQLSfpyseDvfbfLOalGtslUBW-UD1xsTJ8A2aql0Ymm-rRrJZCMg/viewform?usp=sf_link"
+        return dict_error_message, href_survey
 
 
     param1 = f.args['key']
     param2 = f.args['dpt']
-    # param3 = f.args['stdID']
+    param3 = f.args['stdID']
 
     # doc_check_1 = db.collection('Student-Fund-Data').document(param1).get()
     doc_check_2 = db.collection(u'Top-7-Scholarship').document(param2).get()
 
+    # 사용자가 dept를 잘못 입력 시, 잘못된 경로임을 알려주기
     if not doc_check_2.exists:
-        return dict_error_message
+        href_survey = f"https://docs.google.com/forms/d/e/1FAIpQLSfpyseDvfbfLOalGtslUBW-UD1xsTJ8A2aql0Ymm-rRrJZCMg/viewform?usp=sf_link"
+        return dict_error_message, href_survey
 
-    # 새로운 href 생성
-    href_1 = f"/chart-1?key={param1}&dpt={param2}"
-    href_2 = f"/table?key={param1}&dpt={param2}"
-    href_3 = f"/chart-2?key={param1}&dpt={param2}"
+    # href 생성
+    href_survey = f"https://docs.google.com/forms/d/e/1FAIpQLSfpyseDvfbfLOalGtslUBW-UD1xsTJ8A2aql0Ymm-rRrJZCMg/viewform?usp=pp_url&entry.951904216={param3}"
 
     # content 1
     # df의 열 설정
@@ -247,9 +253,9 @@ def _content(href: str):
                 "content-1-2": show_part_1_2, 
                 "content-2": showpart_2, 
                 "content-3": showpart_3,
-                "key": param1,
-                "dpt": param2
-    }
+                # "key": param1,
+                # "dpt": param2
+    }, href_survey
 
 
 @app.callback(
@@ -291,16 +297,25 @@ def render_page_content(data, link_1_click, link_2_click, link_3_click):
                 ), explanation_3, summary_3, False, False, True
 
     # 사용자가 다른 주소로 접근시, 잘못된 경로임을 알려주기
-    return html.Div(
+    return [html.Div(
         [
-            html.H1("404: Not found", className="text-danger"),
+            html.H1("안녕하세요!✨💕", className="text-muted"),
             html.Hr(),
-            html.P(f"입력하신 주소는 잘못된 경로입니다."),
-            html.P("이메일을 통해 전달받은 올바른 주소를 입력하시면 개인 맞춤형 페이지를 확인하실 수 있습니다."),
+            html.P("서비스 테스터로 참여해주신 여러분을 환영합니다."),
+            html.P(children=[
+                    "장학금 및 연구비 데이터 시각화 서비스는 2023년의 ",
+                    html.B('장학금/연구비 수혜내역 시각화 서비스'),
+                    "를 고도화시킨 서비스입니다."
+                   ]
+            ),
+            html.P("찬찬히 서비스 이용해보신 후, 꼭 상단의 배너를 누르셔서 설문조사에 응해주시길 부탁드립니다."),
             html.P("감사합니다!"),
         ],
         className="p-3 bg-light rounded-3",
-    ), "주소창에 잘못된 경로를 입력하였습니다.", "잘못된 경로", False, False, False
+    ), explanation_4, 
+       summary_4, 
+       False, False, False
+    ]
 
 
 @app.callback(
