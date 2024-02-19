@@ -22,6 +22,7 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
+app.title = "장학금 및 연구비 시각화 서비스"
 server = app.server
 app.config.suppress_callback_exceptions = True
 
