@@ -33,9 +33,7 @@
   }
 
 /*
-Dash Bootstrap CSS 적용하기
-지현 쌤의 1rem = 14px
-시스템 폰트는 1rem=16px로 되어 있는 듯하다
+system-font: 1rem=16px
 viewport: 390px × 844px
 */  
 
@@ -43,8 +41,6 @@ viewport: 390px × 844px
     color: #F15C6A;
     text-align: center;
     text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
-    /* -webkit-text-stroke-width: 1;
-    -webkit-text-stroke-color: #FFF; */
     font-family: RixInooAriDuriR;
     font-size: 1.5rem;
     font-style: normal;
@@ -105,11 +101,8 @@ viewport: 390px × 844px
     width: 29.2308vw; /*114px*/
     height: 6.1611vh; /*52px*/
     max-width: 200px;
-    /* width: 7.125rem;
-    height: 3.3125rem; */
     letter-spacing: -0.408px;
     flex-shrink: 0;
-    /* padding: 0.3214rem 0.5714rem; */
     padding: 0px 0px;
   }
 
