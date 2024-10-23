@@ -13,3 +13,9 @@ To create dynamic and interactive visualizations, we leverage the following tool
 * Firestore: Firestore provides a scalable and flexible database solution for storing and managing data
 
 Feel free to explore our visualizations and utilize the tools provided to gain insights.
+
+![Dash Page 1](https://github.com/data-ty-kim/benefit_viz_next/blob/main/readme_image/image1.png?raw=true)
+
+![Dash Page 2](https://github.com/data-ty-kim/benefit_viz_next/blob/main/readme_image/image2.png?raw=true)
+
+![Dash Page 3](https://github.com/data-ty-kim/benefit_viz_next/blob/main/readme_image/image3.png?raw=true)
