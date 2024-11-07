@@ -68,7 +68,7 @@ app.layout = dbc.Container(
                     rel='noreferrer noopener',
                     id='survey'
                 ),
-                html.P('장학금 및 연구비 데이터 시각화 서비스', 
+                html.P('장학금 및 연구비 시각화/추천서비스', 
                        className='dbc-header-title'
                 )
             ],
@@ -87,18 +87,18 @@ app.layout = dbc.Container(
 
                 ),
                 dbc.Button(children=[
-                                "학과 내 최다",
+                                "전공(학과) 기반",
                                 html.Br(),
-                                "수여 장학금",
+                                "장학금 추천",
                             ],
                             color="link",
                             id='link-2',
                             className='nav-link'
                 ),
                 dbc.Button(children=[
-                                "등록금 대비",
+                                "데이터 기반",
                                 html.Br(),
-                                "수혜금액",
+                                "장학금 추천",
                             ],
                             color="link",
                             id='link-3',
@@ -158,13 +158,30 @@ def _content(href: str):
         href_survey = f"https://docs.google.com/forms/d/e/1FAIpQLSfpyseDvfbfLOalGtslUBW-UD1xsTJ8A2aql0Ymm-rRrJZCMg/viewform?usp=sf_link"
         return dict_error_message, href_survey
 
+    if not ('key' in f.args and 'dpt' in f.args and 'stdID' in f.args):
+        href_survey = f"https://docs.google.com/forms/d/e/1FAIpQLSfpyseDvfbfLOalGtslUBW-UD1xsTJ8A2aql0Ymm-rRrJZCMg/viewform?usp=sf_link"
+        return dict_error_message, href_survey
 
     param1 = f.args['key']
     param2 = f.args['dpt']
     param3 = f.args['stdID']
 
-    # doc_check_1 = db.collection('Student-Fund-Data').document(param1).get()
+    try:
+        doc_check_1 = (
+            db.collection('Student-Fund-Data')
+              .document(param1)
+              .collection('Semester')
+              .stream()
+              .__next__()
+        )
+    except StopIteration:
+        doc_check_1 = None
     doc_check_2 = db.collection(u'Top-7-Scholarship').document(param2).get()
+
+    # 사용자가 key를 잘못 입력 시, 잘못된 경로임을 알려주기
+    if not doc_check_1:
+        href_survey = f"https://docs.google.com/forms/d/e/1FAIpQLSfpyseDvfbfLOalGtslUBW-UD1xsTJ8A2aql0Ymm-rRrJZCMg/viewform?usp=sf_link"
+        return dict_error_message, href_survey
 
     # 사용자가 dept를 잘못 입력 시, 잘못된 경로임을 알려주기
     if not doc_check_2.exists:
@@ -343,16 +360,30 @@ def render_page_content(data, link_1_click, link_2_click, link_3_click):
                                     "기존에 수혜받은 장학금을 나타냅니다~!"
                                     ],
                                     className='card-legend'
-                                )]
-                            ),
+                                )
+                            ],
+                            className="card-second"
+                    ),
                     dbc.Card(
                         children=[
                             html.Div(data['content-2-3'], className="card-table1"),
                             html.Div(
-                                html.P("※ 자세한 정보는 고려대학교 일반대학원 홈페이지 (대학원생활-장학제도-대학/학과 장학금)에 참고하세요.", 
-                                       className='card-scholarship-info')
+                                html.P(
+                                    children=[
+                                        "※ 자세한 정보는 고려대학교 일반대학원 홈페이지",
+                                        html.A(
+                                            "(대학원생활-장학제도-대학/학과 장학금)",
+                                            href="https://graduate.korea.ac.kr/scholarship/status.html",
+                                            target='_blank',
+                                            rel='noreferrer noopener',
+                                        ),
+                                        "을 참고하세요.",
+                                    ],
+                                    className='card-scholarship-info'
+                                )
                             )
-                        ] if data['content-2-3'] is not None else None
+                        ] if data['content-2-3'] is not None else None,
+                        className="card-second"
                     )
                         
                 ], explanation_2, summary_2, False, True, False

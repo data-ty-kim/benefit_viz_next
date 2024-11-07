@@ -4,7 +4,7 @@ from dash import html
 
 summary_1 = "수혜받은 장학금과 연구비를 유형과 함께 보여줍니다."
 
-summary_2 = "재학중인 학과에서 많은 학생이 받은 장학금입니다."
+summary_2 = "재학 중인 전공(학과)를 기반으로 장학금을 추천합니다."
 # def summary_2(dept):
 #     return f"{dept}에서 가장 많은 학생이 받은 장학금입니다."
 
@@ -33,8 +33,16 @@ explanation_1 = Card(
 explanation_2 = Card(
                 CardBody(
                     children=[
-                    html.P("2020년 이후 동일 학과 학생들이 가장 많이 받은 상위 장학금 목록입니다.", className='mb-1'),
-                    html.P("학생이 해당 장학금을 이미 받은 적이 있다면 '기수혜여부'에 ★ 표시됩니다."),
+                    html.P(
+                        "1. 통계적으로 받기 유리한 장학금을 추천드립니다! (2020년 이후 데이터)",
+                        className='mb-1'
+                    ),
+                    html.P(
+                        "해당 장학금을 이미 받은 적이 있다면 '기수혜여부'에 ★ 표시됩니다.", 
+                        style={'margin-left': '0.9rem'},
+                        className='mb-1'
+                    ),
+                    html.P("2. 재학 중인 학과와 관련된 장학금을 추천드립니다!"),
                     ],
                     className='dbc-card-explanation'
                 ),

@@ -200,6 +200,12 @@ viewport: 390px × 844px
     margin: 1rem;
   } 
 
+  .card-second {
+    border-radius: 0.7rem;
+    background: #FFF;
+    margin: 1rem;
+  } 
+
   .card-figure {
     border-radius: 0.7rem;
     /* border: 2px solid #F15C6A; */
@@ -208,8 +214,6 @@ viewport: 390px × 844px
     display: flex;
     align-items: center;
     justify-content: center;
-    
-
   } 
 
 .card-legend {
