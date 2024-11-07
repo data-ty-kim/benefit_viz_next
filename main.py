@@ -11,10 +11,13 @@ from firebase_admin import firestore
 from src.fig_area_1 import fig_area_1
 from src.table_1 import table_1
 from src.table_2 import table_2
+from src.table_3 import table_3
+from src.fig_area_2 import fig_area_2
 from src.fig_area_3 import fig_area_3
 from src.fig_area_error import fig_area_error
 from src.explanation import summary_1, summary_2, summary_3, summary_4
 from src.explanation import explanation_1, explanation_2, explanation_3, explanation_4
+import json
 
 
 cred = credentials.Certificate('./config/smartku-firebase-adminsdk.json')
@@ -144,7 +147,9 @@ def _content(href: str):
     dict_error_message = { 
             "content-1-1": fig_area_error(),
             "content-1-2": html.Div("잘못된 링크로 접속하셨습니다. 주소를 다시 확인해주세요."), 
-            "content-2": html.Div("잘못된 링크로 접속하셨습니다. 주소를 다시 확인해주세요."), 
+            "content-2-1": html.Div("잘못된 링크로 접속하셨습니다. 주소를 다시 확인해주세요."), 
+            "content-2-2": fig_area_error(),
+            "content-2-3": html.Div("잘못된 링크로 접속하셨습니다. 주소를 다시 확인해주세요."), 
             "content-3": fig_area_error()
     }
 
@@ -236,14 +241,48 @@ def _content(href: str):
     df_already_got['기수혜'] = df_already_got['장학금명'].apply(
         lambda x: '★' if x in df_sch['sch_nm'].unique() else ''
     )
+    
     df_already_got = df_already_got[['순위', '장학금명', '기수혜']]
 
+    #df_already_got_with_count.iloc[np.random.permutation(len(df_already_got_with_count))]
+
+    df_already_got_with_count= df_already_got.copy()
+    df_already_got_with_count['기수혜'] = df_already_got_with_count['장학금명'].apply(
+                            lambda x: 'Y' if x in df_sch['sch_nm'].unique() else 'N'
+                            )
+
+    # assigning coordination and size of bubbles according to scholarship ranking
+    df_already_got_with_count['Size'] = [80, 65, 50, 40, 30, 23, 13]
+    df_already_got_with_count['x'] = [1.5, 4.2, 1.2, 5,  4, 6.15, 6.5]
+    df_already_got_with_count['y'] = [7.5, 0.95, 3.1, 8.1, 4.9, 3.6, 6]
+
+    color_map = {'Y': '#7052EF', 'N': '#F15C6A'}
+    df_already_got_with_count['color'] = df_already_got_with_count['기수혜'].map(color_map)
+
+    #json file reading
+    with open('./assets/json/dept_scholarships.json', encoding='utf-8') as f:
+        scholarships_data = json.load(f)
+
+    param4="의과대학"
+    if param4 in scholarships_data:
+        filtered_data = scholarships_data[param4]
+        rows = [[param4] + scholarship for scholarship in filtered_data]
+        df_must_know_scholarships = pd.DataFrame(rows, columns=["학과", "장학금명", "금액", "문의처"])
+    else:
+        df_must_know_scholarships = pd.DataFrame(columns=["학과", "장학금명", "금액", "문의처"])
+
+
     # 표 생성
-    showpart_2 = table_2(df_already_got)
+    showpart_2_1 = table_2(df_already_got)
+    showpart_2_2 = fig_area_2(df_already_got_with_count)
+    showpart_2_3 = table_3(df_must_know_scholarships)
 
     # content 3
     # 학생의 등록금 고지 내역 가져오기
-    list_std_reg = db.collection(u'Student-Registration-Record').document(param1).get().to_dict()['Registration']
+    list_std_reg = (
+        db.collection(u'Student-Registration-Record')
+          .document(param1).get().to_dict()['Registration'])
+
     std_last_reg = list_std_reg[-1]
 
     # 차트 생성
@@ -252,7 +291,9 @@ def _content(href: str):
     return {
                 "content-1-1": show_part_1_1,
                 "content-1-2": show_part_1_2, 
-                "content-2": showpart_2, 
+                "content-2-1": showpart_2_1, 
+                "content-2-2": showpart_2_2,
+                "content-2-3": showpart_2_3,
                 "content-3": showpart_3,
                 # "key": param1,
                 # "dpt": param2
@@ -278,7 +319,7 @@ def render_page_content(data, link_1_click, link_2_click, link_3_click):
     if not clicked_button_id:
          return [
                     dcc.Graph(figure=data["content-1-1"]), 
-                    dbc.Card(data["content-1-2"], className="card-table")
+                    dbc.Card(data["content-1-2"], className="card-table"), 
                ], explanation_1, summary_1, True, False, False
 
     elif clicked_button_id == "link-1":
@@ -288,9 +329,33 @@ def render_page_content(data, link_1_click, link_2_click, link_3_click):
                ], explanation_1, summary_1, True, False, False
 
     elif clicked_button_id == "link-2":
-        return dbc.Card(
-                    data['content-2'], className="card-table"
-                ), explanation_2, summary_2, False, True, False
+        return [
+                    dbc.Card(data['content-2-1'], className="card-table"),
+                    dbc.Card([
+                                html.Div(
+                                    dcc.Graph(figure=data["content-2-2"]),
+                                    className='card-figure'
+                                ),
+                                html.Div(
+                                    children=[
+                                    "🎓", html.B("보라색 말풍선"), "🎓", 
+                                    html.Br(),
+                                    "기존에 수혜받은 장학금을 나타냅니다~!"
+                                    ],
+                                    className='card-legend'
+                                )]
+                            ),
+                    dbc.Card(
+                        children=[
+                            html.Div(data['content-2-3'], className="card-table1"),
+                            html.Div(
+                                html.P("※ 자세한 정보는 고려대학교 일반대학원 홈페이지 (대학원생활-장학제도-대학/학과 장학금)에 참고하세요.", 
+                                       className='card-scholarship-info')
+                            )
+                        ] if data['content-2-3'] is not None else None
+                    )
+                        
+                ], explanation_2, summary_2, False, True, False
 
     elif clicked_button_id == "link-3":
         return dcc.Graph(

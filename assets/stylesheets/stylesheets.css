@@ -199,3 +199,50 @@ viewport: 390px × 844px
     background: #FFF;
     margin: 1rem;
   } 
+
+  .card-figure {
+    border-radius: 0.7rem;
+    /* border: 2px solid #F15C6A; */
+    background: #F9F9F9;
+    margin: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+
+  } 
+
+.card-legend {
+    color: #7052EF;
+    font-size: 1rem;
+    /* text-align: justify; */
+    text-align: center;
+    padding-left: 0.2rem;
+    margin-bottom: 0.6rem;
+}
+
+  .card-table1 {
+    border-radius: 0.7rem;
+    /* border: 2px solid #F15C6A; */
+    background: #FFF;
+    margin: 1rem;
+  } 
+
+  .card-table1::before {
+    content: "";
+    display: block;             
+    width: 100%;                
+    height: 15vh;              
+    background-image: url('../images/head.png'); 
+    background-size: cover;     
+    background-position: center; 
+}
+
+.card-scholarship-info {
+  color: #333;
+  font-size: 0.8rem;
+  /* text-align: justify; */ 
+  text-align: center;
+  padding-left: 0.2rem;
+  margin-bottom: 0.6rem;
+}
