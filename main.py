@@ -302,15 +302,44 @@ def _content(href: str):
     showpart_2_3 = table_3(df_must_know_scholarships)
 
     # content 3
-    # 학생의 등록금 고지 내역 가져오기
-    list_std_reg = (
-        db.collection(u'Student-Registration-Record')
-          .document(param1).get().to_dict()['Registration'])
+    # 추천 장학 공지 가져오기
+    list_gpt_recommendation = (
+        db.collection('GPT-Based-Recommendation')
+          .document(param2).get().to_dict()['recommendation']
+    )
 
-    std_last_reg = list_std_reg[-1]
+    df_gpt = pd.DataFrame(list_gpt_recommendation)[['시기', '맞춤형 추천 장학금']]
+    showpart_3_1 = table_3(df_gpt)
 
-    # 차트 생성
-    showpart_3 = fig_area_3(df_chart, std_last_reg)
+    # 최신 장학 공지 가져오기
+    notice = db.collection('Recent-Notice').stream()
+
+    for post in notice:
+        str_date_of_update = post.id
+        list_notice = post.to_dict()['notice']
+
+    df_notice = pd.DataFrame(list_notice)[['posted_date', 'department_name', 'subject']]
+    df_notice['posted_date'] = pd.to_datetime(df_notice['posted_date']).dt.date
+    df_notice['subject'] = df_notice['subject'].apply(lambda x: x[:20] + '...' if len(x) > 25 else x)
+    df_notice.rename(
+        columns={
+            'posted_date': '날짜', 
+            'department_name': '부서', 
+            'subject': '제목 (updated: ' + str_date_of_update + ')'
+            }, 
+        inplace=True
+    )
+    showpart_3_2 = table_3(df_notice)
+
+    # 시기별 참고 장학금
+    # 추천 장학 공지 가져오기
+    list_month_recommendation = (
+        db.collection('GPT-Based-Recommendation')
+          .document('november').get().to_dict()['recommendation']
+    )
+
+    df_month = pd.DataFrame(list_month_recommendation)[['시기', '맞춤형 추천 장학금']]
+    showpart_3_3 = table_3(df_month)
 
     return {
                 "content-1-1": show_part_1_1,
@@ -318,7 +347,9 @@ def _content(href: str):
                 "content-2-1": showpart_2_1, 
                 "content-2-2": showpart_2_2,
                 "content-2-3": showpart_2_3,
-                "content-3": showpart_3,
+                "content-3-1": showpart_3_1,
+                "content-3-2": showpart_3_2,
+                "content-3-3": showpart_3_3,
                 # "key": param1,
                 # "dpt": param2
     }, href_survey
@@ -413,9 +444,20 @@ def render_page_content(data, link_1_click, link_2_click, link_3_click):
                 ], explanation_2, summary_2, False, True, False
 
     elif clicked_button_id == "link-3":
-        return dcc.Graph(
-                    figure=data['content-3']
-                ), explanation_3, summary_3, False, False, True
+        return [
+                html.P("학적 데이터 맞춤으로 추천된 장학금입니다!", className='recommendation'),
+                dbc.Card(
+                    data['content-3-1'], className="card-table"
+                ),
+                html.P("최근 장학 게시판에 올라온 장학금 목록입니다!", className='recommendation'),
+                dbc.Card(
+                    data['content-3-2'], className="card-table"
+                ),
+                html.P("지금 시기에 참고하면 좋은 장학금 목록입니다!", className='recommendation'),
+                dbc.Card(
+                    data['content-3-3'], className="card-table"
+                ),
+            ], explanation_3, summary_3, False, False, True
 
     # 사용자가 다른 주소로 접근시, 잘못된 경로임을 알려주기
     return [html.Div(
