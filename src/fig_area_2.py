@@ -31,6 +31,25 @@ def fig_area_2(df):
                             textposition='middle center',
                             name=""
                         ))
+    
+     #Preparing wrapped text for putting inside bubbles
+    def wrap_text_to_fit_bubble(text, bubble_size):
+        char_limit = max(5, bubble_size // 10)  
+        words = text.split(" ")
+        wrapped_text, line = "", ""
+        
+        for word in words:
+            if len(line) + len(word) + 1 <= char_limit:
+                line += (word + " ")
+            else:
+                wrapped_text += line.strip() + "<br>"
+                line = word + " "
+        wrapped_text += line.strip()
+        
+        return wrapped_text
+
+    df['wrapped_labels'] = [wrap_text_to_fit_bubble(text, size) for text, size in zip(
+        df['장학금명'], df['Size'])]
 
 
     fig_area_2.add_trace(go.Scatter
@@ -38,7 +57,7 @@ def fig_area_2(df):
                             x=df.loc[df['기수혜'] == 'N', 'x'], 
                             y=df.loc[df['기수혜'] == 'N', 'y'], 
                             mode='text', 
-                            text=df.loc[df['기수혜'] == 'N', '장학금명'],
+                            text=df.loc[df['기수혜'] == 'N', 'wrapped_labels'],
                             textposition='middle center',
                             name=""
                         ))
