@@ -225,14 +225,58 @@ viewport: 390px × 844px
     margin-bottom: 0.6rem;
 }
 
-  .card-table1 {
+.hoikui-left {
+  width: 9.45vw;
+  height: auto;
+  min-width: 70px;
+  /* flex-shrink: 0; */ 
+  margin-left: 0.88rem;
+  margin-right: 0.88rem;
+  transform: scale(-1, 1);
+}
+
+.hoikui-right {
+  width: 9.45vw;
+  height: auto;
+  min-width: 70px;
+  /* flex-shrink: 0; */
+  margin-left: 0.88rem;
+  margin-right: 0.88rem;
+}
+
+.content2-text {
+  color: #333;
+  text-align: center;
+  font-family: NanumSquare;
+  /* font-size: 1.75rem; */
+  font-size: clamp(1rem, 1.7vw, 1.75rem);
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1.875rem;
+  letter-spacing: -0.0255rem;
+  margin: 0;
+  max-width: 40vw;
+}
+
+.content2-banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 15vh;
+  flex-shrink: 0;
+  background: #FFF4F4;
+  margin-top: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+  /* .card-table1 {
     border-radius: 0.7rem;
-    /* border: 2px solid #F15C6A; */
     background: #FFF;
     margin: 1rem;
-  } 
+  }  */
 
-  .card-table1::before {
+  /* .card-table1::before {
     content: "";
     display: block;             
     width: 100%;                
@@ -240,7 +284,7 @@ viewport: 390px × 844px
     background-image: url('../images/head.png'); 
     background-size: cover;     
     background-position: center; 
-}
+} */
 
 .card-scholarship-info {
   color: #333;
