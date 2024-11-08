@@ -280,7 +280,14 @@ def _content(href: str):
     with open('./assets/json/dept_scholarships.json', encoding='utf-8') as f:
         scholarships_data = json.load(f)
 
-    param4="의학과"
+    # 급해서 만들어둔 임시 설정
+    dict_dept = {
+        'dpt_sample_1': '보건안전융합과학과', 
+        'dpt_sample_2': '산업경영공학과', 
+        'dpt_sample_3': '역사학과', 
+    }
+
+    param4=dict_dept[param2]
     if param4 in scholarships_data:
         filtered_data = scholarships_data[param4]
         rows = [[param4] + scholarship for scholarship in filtered_data]
