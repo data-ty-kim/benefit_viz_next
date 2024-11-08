@@ -280,7 +280,7 @@ def _content(href: str):
     with open('./assets/json/dept_scholarships.json', encoding='utf-8') as f:
         scholarships_data = json.load(f)
 
-    param4="의과대학"
+    param4="의학과"
     if param4 in scholarships_data:
         filtered_data = scholarships_data[param4]
         rows = [[param4] + scholarship for scholarship in filtered_data]
@@ -366,7 +366,24 @@ def render_page_content(data, link_1_click, link_2_click, link_3_click):
                     ),
                     dbc.Card(
                         children=[
-                            html.Div(data['content-2-3'], className="card-table1"),
+                            html.Div(
+                                children=[
+                                    html.Img(
+                                        src='./assets/images/hoikui_original.svg',
+                                        className='hoikui-left'
+                                    ),
+                                    html.P(
+                                        "알아두면 좋은 학과 장학금", 
+                                        className='content2-text'
+                                    ),
+                                    html.Img(
+                                        src='./assets/images/hoikui_original.svg',
+                                        className='hoikui-right'
+                                    ) 
+                                ],
+                                className='content2-banner'
+                            ),
+                            html.Div(data['content-2-3'], className="card-table"),
                             html.Div(
                                 html.P(
                                     children=[
