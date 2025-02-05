@@ -12,6 +12,7 @@ from src.fig_area_1 import fig_area_1
 from src.table_1 import table_1
 from src.table_2 import table_2
 from src.table_3 import table_3
+from src.table_4 import table_4
 from src.fig_area_2 import fig_area_2
 from src.fig_area_3 import fig_area_3
 from src.fig_area_error import fig_area_error
@@ -309,7 +310,7 @@ def _content(href: str):
     )
 
     df_gpt = pd.DataFrame(list_gpt_recommendation)[['시기', '맞춤형 추천 장학금']]
-    showpart_3_1 = table_3(df_gpt)
+    showpart_3_1 = table_4(df_gpt, df_gpt)
 
     # 최신 장학 공지 가져오기
     notice = db.collection('Recent-Notice').stream()
@@ -320,6 +321,7 @@ def _content(href: str):
 
     df_notice = pd.DataFrame(list_notice)[['posted_date', 'department_name', 'subject']]
     df_notice['posted_date'] = pd.to_datetime(df_notice['posted_date']).dt.date
+    df_notice['subject1']=df_notice['subject'] 
     df_notice['subject'] = df_notice['subject'].apply(lambda x: x[:20] + '...' if len(x) > 25 else x)
     df_notice.rename(
         columns={
@@ -329,7 +331,8 @@ def _content(href: str):
             }, 
         inplace=True
     )
-    showpart_3_2 = table_3(df_notice)
+    
+    showpart_3_2 = table_4(df_notice[['날짜', '부서', '제목 (updated: ' + str_date_of_update + ')']],df_notice)
 
     # 시기별 참고 장학금
     # 추천 장학 공지 가져오기
@@ -339,7 +342,7 @@ def _content(href: str):
     )
 
     df_month = pd.DataFrame(list_month_recommendation)[['시기', '맞춤형 추천 장학금']]
-    showpart_3_3 = table_3(df_month)
+    showpart_3_3 = table_4(df_month,df_month)
 
     return {
                 "content-1-1": show_part_1_1,
