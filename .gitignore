@@ -154,3 +154,5 @@ temp_test.py
 .gcloudignore
 app.yaml
 main copy.py
+assets/json/dict_college.txt
+assets/json/dict_major.txt

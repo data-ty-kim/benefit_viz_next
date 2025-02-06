@@ -19,6 +19,7 @@ from src.fig_area_error import fig_area_error
 from src.explanation import summary_1, summary_2, summary_3, summary_4
 from src.explanation import explanation_1, explanation_2, explanation_3, explanation_4
 import json
+import datetime
 
 
 cred = credentials.Certificate('./config/smartku-firebase-adminsdk.json')
@@ -151,7 +152,10 @@ def _content(href: str):
             "content-2-1": html.Div("잘못된 링크로 접속하셨습니다. 주소를 다시 확인해주세요."), 
             "content-2-2": fig_area_error(),
             "content-2-3": html.Div("잘못된 링크로 접속하셨습니다. 주소를 다시 확인해주세요."), 
-            "content-3": fig_area_error()
+            "content-3": fig_area_error(),
+            "content-3-1": html.Div("잘못된 링크로 접속하셨습니다. 주소를 다시 확인해주세요."),
+            "content-3-2": html.Div("잘못된 링크로 접속하셨습니다. 주소를 다시 확인해주세요."),
+            "content-3-3": html.Div("잘못된 링크로 접속하셨습니다. 주소를 다시 확인해주세요."),
     }
 
     # 사용자가 다른 주소로 접근 시, 잘못된 경로임을 알려주기
@@ -159,13 +163,14 @@ def _content(href: str):
         href_survey = f"https://docs.google.com/forms/d/e/1FAIpQLSfpyseDvfbfLOalGtslUBW-UD1xsTJ8A2aql0Ymm-rRrJZCMg/viewform?usp=sf_link"
         return dict_error_message, href_survey
 
-    if not ('key' in f.args and 'dpt' in f.args and 'stdID' in f.args):
+    if not ('key' in f.args and 'dpt' in f.args and 'col' in f.args and 'stdID' in f.args):
         href_survey = f"https://docs.google.com/forms/d/e/1FAIpQLSfpyseDvfbfLOalGtslUBW-UD1xsTJ8A2aql0Ymm-rRrJZCMg/viewform?usp=sf_link"
         return dict_error_message, href_survey
 
     param1 = f.args['key']
     param2 = f.args['dpt']
-    param3 = f.args['stdID']
+    param3 = f.args['col']
+    param4 = f.args['stdID']
 
     try:
         doc_check_1 = (
@@ -190,7 +195,7 @@ def _content(href: str):
         return dict_error_message, href_survey
 
     # href 생성
-    href_survey = f"https://docs.google.com/forms/d/e/1FAIpQLSfpyseDvfbfLOalGtslUBW-UD1xsTJ8A2aql0Ymm-rRrJZCMg/viewform?usp=pp_url&entry.951904216={param3}"
+    href_survey = f"https://docs.google.com/forms/d/e/1FAIpQLSfpyseDvfbfLOalGtslUBW-UD1xsTJ8A2aql0Ymm-rRrJZCMg/viewform?usp=pp_url&entry.951904216={param4}"
 
     # content 1
     # df의 열 설정
@@ -277,21 +282,14 @@ def _content(href: str):
     color_map = {'Y': '#7052EF', 'N': '#F15C6A'}
     df_already_got_with_count['color'] = df_already_got_with_count['기수혜'].map(color_map)
 
-    #json file reading
+    # 학과 장학금 json file
     with open('./assets/json/dept_scholarships.json', encoding='utf-8') as f:
         scholarships_data = json.load(f)
 
-    # 급해서 만들어둔 임시 설정
-    dict_dept = {
-        'dpt_sample_1': '보건안전융합과학과', 
-        'dpt_sample_2': '산업경영공학과', 
-        'dpt_sample_3': '역사학과', 
-    }
-
-    param4=dict_dept[param2]
-    if param4 in scholarships_data:
-        filtered_data = scholarships_data[param4]
-        rows = [[param4] + scholarship for scholarship in filtered_data]
+    # 학과 장학금
+    if param2 in scholarships_data:
+        filtered_data = scholarships_data[param2]
+        rows = [[param2] + scholarship for scholarship in filtered_data]
         df_must_know_scholarships = pd.DataFrame(rows, columns=["학과", "장학금명", "금액", "문의처"])
     else:
         df_must_know_scholarships = pd.DataFrame(columns=["학과", "장학금명", "금액", "문의처"])
@@ -303,25 +301,34 @@ def _content(href: str):
     showpart_2_3 = table_3(df_must_know_scholarships)
 
     # content 3
-    # 추천 장학 공지 가져오기
+    # 추천 장학 공지 가져오기 - 임시로 값 넣기
+    # 학과 장학금 json file
+    with open('./assets/json/dict_college.json', encoding='utf-8') as f:
+        dict_college = json.load(f)
+
+    # 사용자가 col를 잘못 입력 시, 잘못된 경로임을 알려주기
+    if not param3 in dict_college.keys():
+        href_survey = f"https://docs.google.com/forms/d/e/1FAIpQLSfpyseDvfbfLOalGtslUBW-UD1xsTJ8A2aql0Ymm-rRrJZCMg/viewform?usp=sf_link"
+        return dict_error_message, href_survey
+
+    str_college = dict_college[param3]
+
     list_gpt_recommendation = (
         db.collection('GPT-Based-Recommendation')
-          .document(param2).get().to_dict()['recommendation']
+          .document(str_college).get().to_dict()['recommendation']
     )
 
-    df_gpt = pd.DataFrame(list_gpt_recommendation)[['시기', '맞춤형 추천 장학금']]
+    df_gpt = pd.DataFrame(list_gpt_recommendation)[['시기', '맞춤형 추천 장학금', 'content']]
     showpart_3_1 = table_4(df_gpt, df_gpt)
 
     # 최신 장학 공지 가져오기
-    notice = db.collection('Recent-Notice').stream()
+    post = db.collection('Recent-Notice').document('recent').get()
 
-    for post in notice:
-        str_date_of_update = post.id
-        list_notice = post.to_dict()['notice']
+    str_date_of_update, = post.to_dict().keys()
+    list_notice = post.to_dict()[str_date_of_update]
 
-    df_notice = pd.DataFrame(list_notice)[['posted_date', 'department_name', 'subject']]
+    df_notice = pd.DataFrame(list_notice)[['posted_date', 'department_name', 'subject', 'content']]
     df_notice['posted_date'] = pd.to_datetime(df_notice['posted_date']).dt.date
-    df_notice['subject1']=df_notice['subject'] 
     df_notice['subject'] = df_notice['subject'].apply(lambda x: x[:20] + '...' if len(x) > 25 else x)
     df_notice.rename(
         columns={
@@ -332,16 +339,22 @@ def _content(href: str):
         inplace=True
     )
     
-    showpart_3_2 = table_4(df_notice[['날짜', '부서', '제목 (updated: ' + str_date_of_update + ')']],df_notice)
+    showpart_3_2 = table_4(
+        df_notice[
+            ['날짜', '부서', '제목 (updated: ' + str_date_of_update + ')', 'content']
+        ], df_notice
+    )
 
     # 시기별 참고 장학금
     # 추천 장학 공지 가져오기
+    this_month = datetime.datetime.today().strftime('%B')
+
     list_month_recommendation = (
         db.collection('GPT-Based-Recommendation')
-          .document('november').get().to_dict()['recommendation']
+          .document(this_month).get().to_dict()['recommendation']
     )
 
-    df_month = pd.DataFrame(list_month_recommendation)[['시기', '맞춤형 추천 장학금']]
+    df_month = pd.DataFrame(list_month_recommendation)[['시기', '맞춤형 추천 장학금', 'content']]
     showpart_3_3 = table_4(df_month,df_month)
 
     return {
@@ -469,7 +482,7 @@ def render_page_content(data, link_1_click, link_2_click, link_3_click):
             html.Hr(),
             html.P("서비스 테스터로 참여해주신 여러분을 환영합니다."),
             html.P(children=[
-                    "장학금 및 연구비 데이터 시각화 서비스는 2023년의 ",
+                    "장학금 및 연구비 데이터 시각화 서비스는 2024년의 ",
                     html.B('장학금/연구비 수혜내역 시각화 서비스'),
                     "를 고도화시킨 서비스입니다."
                    ]

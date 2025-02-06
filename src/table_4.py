@@ -7,7 +7,7 @@ def table_4(df, table_prefix='df'):
         return None
 
     table_component = Table.from_dataframe(
-        df, 
+        df.iloc[:, :-1], 
         striped=True, 
         bordered=False, 
         borderless=True,
@@ -29,6 +29,9 @@ def table_4(df, table_prefix='df'):
         'color': 'white',
         'text-align': 'center',
     }
+
+    for header in table_component.children[0].children[0].children:
+        header.style = header_style
 
     tooltips = []
     tbody = table_component.children[1]
